@@ -61,23 +61,29 @@ I write practical resources about resume development, online account security, p
 
 ### Resume & Career Resource
 
-<a href="https://a.co/d/0hdZU9Cs">
-  <img src="./assets/ats-guide-preview.svg" alt="Preview of The Complete ATS Resume Guide and Builder — view the publication on Amazon" width="100%">
-</a>
+<p align="center">
+  <a href="https://a.co/d/0hdZU9Cs">
+    <img src="./assets/ats-resume-guide-cover.webp" alt="Book cover of The Complete ATS Resume Guide and Builder — view the publication on Amazon" width="280">
+  </a>
+</p>
 
 **[The Complete ATS Resume Guide & Builder](https://a.co/d/0hdZU9Cs)** complements the three resume-builder projects with practical guidance for resume writing and ATS-friendly job application materials.
 
 ### Cybersecurity & Online Account Security Series
 
-<a href="https://a.co/d/01cXK59i">
-  <img src="./assets/online-accounts-book-preview.svg" alt="Preview of How to Create and Secure Your Online Accounts — view the book on Amazon" width="100%">
-</a>
+<p align="center">
+  <a href="https://a.co/d/01cXK59i">
+    <img src="./assets/online-accounts-book-cover.webp" alt="Book cover of How to Create and Secure Your Online Accounts — view the book on Amazon" width="280">
+  </a>
+</p>
 
 **[How to Create and Secure Your Online Accounts](https://a.co/d/01cXK59i)** covers practical ideas related to safer online account creation and protection.
 
-<a href="https://a.co/d/066vMJtI">
-  <img src="./assets/privacy-book-preview.svg" alt="Preview of Privacy, Passwords, and Device Security — view the book on Amazon" width="100%">
-</a>
+<p align="center">
+  <a href="https://a.co/d/066vMJtI">
+    <img src="./assets/privacy-passwords-device-security-cover.webp" alt="Book cover of Privacy, Passwords, and Device Security — view the book on Amazon" width="280">
+  </a>
+</p>
 
 **[Privacy, Passwords, and Device Security](https://a.co/d/066vMJtI)** focuses on online privacy, password safety, account protection, and device security.
 

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-labelledby="title desc">
+  <title id="title">Professional Resume Builder</title>
+  <desc id="desc">Preview card for a free ATS-friendly professional resume and CV builder.</desc>
+  <rect width="1200" height="260" rx="24" fill="#0f172a"/>
+  <rect x="0" y="0" width="16" height="260" rx="8" fill="#34d399"/>
+  <circle cx="1080" cy="60" r="96" fill="#34d399" opacity=".10"/>
+  <text x="64" y="70" fill="#6ee7b7" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="2">CAREER TOOL</text>
+  <text x="64" y="132" fill="#f8fafc" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700">Professional Resume Builder</text>
+  <text x="64" y="180" fill="#cbd5e1" font-family="Arial, Helvetica, sans-serif" font-size="26">Organize experience, skills, education, and achievements for job applications</text>
+  <text x="64" y="226" fill="#6ee7b7" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">OPEN LIVE TOOL  →</text>
+</svg>

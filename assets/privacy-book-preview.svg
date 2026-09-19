@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-labelledby="title desc">
+  <title id="title">Privacy, Passwords, and Device Security</title>
+  <desc id="desc">Preview card for a privacy, password, and device security book.</desc>
+  <rect width="1200" height="260" rx="24" fill="#172033"/>
+  <rect x="0" y="0" width="16" height="260" rx="8" fill="#fb7185"/>
+  <circle cx="1080" cy="60" r="96" fill="#fb7185" opacity=".10"/>
+  <text x="64" y="70" fill="#fda4af" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="2">PRIVACY &amp; DIGITAL SECURITY BOOK</text>
+  <text x="64" y="132" fill="#f8fafc" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="700">Privacy, Passwords, and Device Security</text>
+  <text x="64" y="180" fill="#cbd5e1" font-family="Arial, Helvetica, sans-serif" font-size="26">Practical topics in privacy, password safety, and device protection</text>
+  <text x="64" y="226" fill="#fda4af" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">VIEW ON AMAZON  →</text>
+</svg>

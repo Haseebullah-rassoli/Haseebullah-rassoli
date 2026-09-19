@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-labelledby="title desc">
+  <title id="title">How to Create and Secure Your Online Accounts</title>
+  <desc id="desc">Preview card for an online account security book.</desc>
+  <rect width="1200" height="260" rx="24" fill="#172033"/>
+  <rect x="0" y="0" width="16" height="260" rx="8" fill="#2dd4bf"/>
+  <circle cx="1080" cy="60" r="96" fill="#2dd4bf" opacity=".10"/>
+  <text x="64" y="70" fill="#5eead4" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="2">ONLINE SECURITY BOOK</text>
+  <text x="64" y="132" fill="#f8fafc" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700">How to Create and Secure Your Online Accounts</text>
+  <text x="64" y="180" fill="#cbd5e1" font-family="Arial, Helvetica, sans-serif" font-size="26">A practical resource about safer account creation and protection</text>
+  <text x="64" y="226" fill="#5eead4" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">VIEW ON AMAZON  →</text>
+</svg>

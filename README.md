@@ -99,6 +99,9 @@ I write practical resources about resume development, online account security, p
 
 ## Connect With Me
 
+- [LinkedIn — Haseebullah Rassoli](https://www.linkedin.com/in/haseebullah-rassoli-b08135354)
+- [Facebook — Haseebullah Rassoli](https://www.facebook.com/share/19KVTna9Zg/)
+- [Instagram — @haseebullahrassoli](https://www.instagram.com/haseebullahrassoli/)
 - [Explore all of my GitHub repositories](https://github.com/Haseebullah-rassoli?tab=repositories)
 - [Use the Student Resume Builder](https://haseebullah-rassoli.github.io/student-resume/)
 - [Use the Professional Resume Builder](https://haseebullah-rassoli.github.io/professional-resume/)

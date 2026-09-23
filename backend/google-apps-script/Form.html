@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{font-family:Arial,Helvetica,sans-serif;color:#18324e;background:#fff}
+    *{box-sizing:border-box}body{margin:0;background:#fff;line-height:1.58}main{max-width:750px;margin:auto;padding:24px 23px 34px}
+    .tag{display:inline-block;color:#82591b;background:#fff1d2;padding:5px 11px;border-radius:30px;font-size:11px;font-weight:800;letter-spacing:.08em}
+    h1{font-size:clamp(25px,5vw,32px);letter-spacing:-.025em;line-height:1.17;margin:13px 0 7px;color:#102b4b}p{margin:0 0 13px;color:#5b6d80;font-size:13px}.notice{border:1px solid #ead4ab;background:#fff9eb;padding:13px 15px;border-radius:11px;font-size:12px;color:#645137;margin:16px 0 24px}
+    label:not(.consent){display:block;margin:19px 0 7px;font-size:13px;font-weight:800;color:#24405e}
+    label span{color:#a06b25}input:not([type=checkbox]),select,textarea{width:100%;font:inherit;border:1px solid #aebfd0;border-radius:9px;padding:11px 12px;color:#17324d;background:white;font-size:14px;min-height:45px}textarea{resize:vertical;min-height:150px}input:focus,textarea:focus,select:focus{outline:2px solid #9ec2df;outline-offset:1px}input[type=file]{font-size:12px;padding:10px;max-width:100%}.hint{font-size:11px;color:#64778a;margin:5px 0}.consent{display:flex;align-items:flex-start;gap:10px;margin:24px 0 18px;font-size:12px;color:#4d6075}.consent input{margin-top:3px;accent-color:#1c587d}.consent span{color:#4d6075}button{display:block;background:#183e65;color:white;border:0;border-radius:11px;font:inherit;font-weight:800;font-size:15px;padding:14px;width:100%;cursor:pointer}button:disabled{opacity:.6;cursor:wait}.status{min-height:22px;margin:14px 0;padding:10px 12px;border-radius:9px;font-size:13px;line-height:1.65}.status:empty{padding:0}.status.error{background:#fff0ed;border:1px solid #e8bbb2;color:#873a30}.status.success{background:#e9f7f0;border:1px solid #badcc8;color:#18583d}.hidden{display:none!important}.trap{position:absolute;left:-9999px;opacity:0}.receipt{border:1px solid #c9e4d5;border-radius:15px;background:#f1fbf5;padding:25px;margin-top:20px}.receipt h2{margin:0 0 7px;color:#16593c}.receipt p{color:#355c4a}.receipt .ref{font-size:17px;font-weight:800;color:#194d3b;letter-spacing:.07em;overflow-wrap:anywhere}.receipt .note{margin-top:13px;font-size:12px}.footer{font-size:11px;margin-top:20px;color:#718295}@media(max-width:600px){main{padding:17px 14px 30px}h1{font-size:26px}}
+  </style>
+</head>
+<body>
+<main>
+  <div class="tag">VERIFIED DIGITAL HUB</div>
+  <? if (!ready) { ?>
+    <h1>Form setup in progress</h1>
+    <div class="notice">The owner has not completed private storage setup. No reports can be submitted yet. Please return later.</div>
+  <? } else { ?>
+    <h1 id="heading"><?= kind === 'business' ? 'Start a Business Inquiry' : 'Submit a Redacted Report' ?></h1>
+    <p><?= kind === 'business' ? 'Describe your project. No payment is taken here.' : 'Share the claim and relevant evidence. A review or reply is not guaranteed.' ?></p>
+    <div class="notice">This form is hosted by Google Apps Script. Reports are stored privately in the site owner's Google account. Do not include passwords, one-time codes, bank details, identity documents or unredacted personal information.</div>
+    <form id="hubForm">
+      <input type="hidden" name="kind" value="<?= kind ?>">
+      <div class="trap" aria-hidden="true"><label for="website">Leave blank</label><input id="website" type="text" name="website" tabindex="-1" autocomplete="off"></div>
+      <label for="category"><?= kind === 'business' ? 'Service' : 'Type of concern' ?> <span>*</span></label>
+      <select id="category" name="category" required>
+        <option value="">Choose a category</option>
+        <? if (kind === 'business') { ?>
+          <option>Premium Research &amp; Verification</option><option>Digital Media Services</option>
+          <option>Social Media Management</option><option>Content Creation</option>
+          <option>Advertising &amp; Sponsored Content</option><option>Partnerships</option><option>Other</option>
+        <? } else { ?>
+          <option>Suspicious email or message</option><option>Job or interview offer</option>
+          <option>Scholarship or youth program</option><option>Website or URL</option><option>Other online claim</option>
+        <? } ?>
+      </select>
+      <label for="subject"><?= kind === 'business' ? 'Your name / project name' : 'Organization or claim' ?> (optional)</label>
+      <input id="subject" name="subject" maxlength="160" placeholder="<?= kind === 'business' ? 'Your name or organization' : 'Organization or subject line' ?>">
+      <? if (kind !== 'business') { ?>
+        <label for="source">Source URL (optional)</label>
+        <input id="source" name="source" inputmode="url" maxlength="500" placeholder="Paste as text; do not open a suspicious link">
+      <? } else { ?>
+        <input type="hidden" name="source" value="">
+      <? } ?>
+      <label for="message"><?= kind === 'business' ? 'Project details' : 'What happened?' ?> <span>*</span></label>
+      <textarea id="message" name="message" required minlength="20" maxlength="3500" rows="7" placeholder="<?= kind === 'business' ? 'Describe the goals, scope and timing (at least 20 characters).' : 'Describe what was promised, requested or observed (at least 20 characters). Redact personal information.' ?>"></textarea>
+      <p class="hint">20–3,500 characters.</p>
+      <label for="email">Reply email (optional)</label>
+      <input type="email" id="email" name="email" maxlength="180" autocomplete="email" placeholder="name@example.com">
+      <? if (kind !== 'business') { ?>
+        <label for="attachment">Redacted screenshot (optional)</label>
+        <input id="attachment" name="attachment" type="file" accept="image/png,image/jpeg">
+        <p class="hint">PNG or JPEG only, one image, maximum 2 MB. Blur private details before selecting it.</p>
+      <? } ?>
+      <label class="consent"><input type="checkbox" id="consent" name="consent" value="yes" required><span>I consent to this information being processed through Google Apps Script, private Google Sheets and Google Drive. I have removed sensitive details and understand that a response is not guaranteed.</span></label>
+      <button id="send" type="submit"><?= kind === 'business' ? 'Send Inquiry →' : 'Submit Report →' ?></button>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </form>
+    <div id="receipt" class="receipt hidden" role="status">
+      <h2>Submission saved</h2>
+      <p>Your report has been recorded in the owner's private submission sheet. Save this reference:</p>
+      <div id="reference" class="ref"></div>
+      <p id="notification" class="note"></p>
+      <p class="note">No automatic publication or individual response is promised.</p>
+      <button type="button" id="again">Submit another report</button>
+    </div>
+    <p class="footer">Independent educational project. Not an emergency response service.</p>
+  <? } ?>
+</main>
+<script>
+(function(){
+  var form=document.getElementById('hubForm'); if(!form) return;
+  var button=document.getElementById('send'),status=document.getElementById('status');
+  var file=document.getElementById('attachment'),original=button.textContent,sending=false;
+  form.addEventListener('submit',function(e){
+    e.preventDefault(); if(sending||!form.reportValidity())return;
+    if(file&&file.files.length){
+      var f=file.files[0],valid=(f.type==='image/png'||f.type==='image/jpeg');
+      if(!valid||f.size>2*1024*1024||f.size===0){status.className='status error';status.textContent='Choose a nonempty PNG or JPEG image up to 2 MB.';return;}
+    }
+    sending=true;button.disabled=true;button.textContent='Saving your report…';
+    status.className='status';status.textContent='Please wait. Your submission is not yet confirmed.';
+    google.script.run
+      .withSuccessHandler(function(result){
+        sending=false;button.disabled=false;button.textContent=original;
+        if(!result||!result.saved){status.className='status error';status.textContent='The submission was not confirmed. Please retry.';return;}
+        form.classList.add('hidden');
+        document.getElementById('reference').textContent=result.reference;
+        document.getElementById('notification').textContent=result.notified?'The owner was notified by email.':'The report is saved, but email notification could not be confirmed.';
+        document.getElementById('receipt').classList.remove('hidden');
+        form.reset();
+      })
+      .withFailureHandler(function(error){
+        sending=false;button.disabled=false;button.textContent=original;
+        status.className='status error';
+        status.textContent='Submission not confirmed: '+(error&&error.message?error.message:'Please retry later.')+' Your details remain on this page.';
+      })
+      .submitHubForm(form);
+  });
+  document.getElementById('again').addEventListener('click',function(){
+    document.getElementById('receipt').classList.add('hidden');
+    status.textContent='';status.className='status';form.classList.remove('hidden');
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 /**
  * Verified Digital Hub — owner-managed Google Apps Script form backend.
  * Never put the destination folder/sheet IDs or private data in GitHub.
- * Run setupOnce() manually in your OWN Apps Script editor before deployment.
+ * Run setupOnce_() manually in your OWN Apps Script editor before deployment.
  */
 const HUB_OWNER_EMAIL = 'rassolihaseebullah24@gmail.com';
 const HUB_MAX_IMAGE_BYTES = 2 * 1024 * 1024;
@@ -17,7 +17,7 @@ const HUB_SERVICES = [
 ];
 
 /** Run this one time while signed in to the correct Google account. */
-function setupOnce() {
+function setupOnce_() {
   const props = PropertiesService.getScriptProperties();
   if (props.getProperty('HUB_SHEET_ID') && props.getProperty('HUB_FOLDER_ID')) {
     return 'Already configured. Do not create duplicate storage.';

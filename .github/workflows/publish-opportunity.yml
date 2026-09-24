@@ -35,10 +35,6 @@ on:
         description: "Funding (do not assume)"
         required: false
         type: string
-      eligibility:
-        description: "Eligibility summary"
-        required: false
-        type: string
       status:
         description: "Publication status"
         required: true

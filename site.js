@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded",()=>{const toggle=document.querySelector(".mobile-toggle"),nav=document.querySelector(".nav-links");if(toggle&&nav){toggle.addEventListener("click",()=>{const show=nav.classList.toggle("is-open");toggle.setAttribute("aria-expanded",String(show));toggle.innerHTML=show?'<svg class="nav-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg><span class="nav-action-label">Close</span>':'<svg class="nav-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="nav-action-label">Menu</span>'});}document.querySelectorAll(".nav-drop").forEach(d=>{d.addEventListener("toggle",()=>{if(d.open)document.querySelectorAll(".nav-drop").forEach(other=>{if(other!==d)other.open=false;});});});document.addEventListener("click",event=>{if(!event.target.closest(".nav-drop"))document.querySelectorAll(".nav-drop").forEach(d=>d.open=false);});const s=document.querySelector("#opportunity-search"),cat=document.querySelector("#opportunity-filter");function apply(){document.querySelectorAll("[data-search]").forEach(card=>{card.hidden=!!((s&&!card.dataset.search.includes(s.value.toLowerCase()))||(cat&&cat.value&&cat.value!==card.dataset.category));});}if(s)s.addEventListener("input",apply);if(cat)cat.addEventListener("change",apply);
+document.addEventListener("DOMContentLoaded",()=>{const toggle=document.querySelector(".mobile-toggle"),nav=document.querySelector(".nav-links");if(toggle&&nav){toggle.addEventListener("click",()=>{const show=nav.classList.toggle("is-open");toggle.setAttribute("aria-expanded",String(show));toggle.innerHTML=show?'<svg class="nav-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg><span class="nav-action-label">Close</span>':'<svg class="nav-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="nav-action-label">Menu</span>'});}document.querySelectorAll(".nav-drop").forEach(d=>{d.addEventListener("toggle",()=>{if(d.open)document.querySelectorAll(".nav-drop").forEach(other=>{if(other!==d)other.open=false;});});});document.addEventListener("click",event=>{if(!event.target.closest(".nav-drop"))document.querySelectorAll(".nav-drop").forEach(d=>d.open=false);});const s=document.querySelector("#opportunity-search"),cat=document.querySelector("#opportunity-filter");function apply(){const cards=[...document.querySelectorAll('[data-search]')];const query=s?s.value.trim().toLowerCase():'';cards.forEach(card=>{card.hidden=!!((query&&!card.dataset.search.toLowerCase().includes(query))||(cat&&cat.value&&cat.value!==card.dataset.category));});const feedback=document.querySelector('#search-feedback');if(feedback){const count=cards.filter(card=>!card.hidden).length;feedback.textContent=count?count+' '+(count===1?'category':'categories')+' shown.':'No categories match. Try a different search or choose All categories.';}}if(s)s.addEventListener("input",apply);if(cat)cat.addEventListener("change",apply);
 // Owner-approved WhatsApp Business short link; do not expose or infer a phone number.
 const waUrl=typeof window.HUB_WHATSAPP_CONTACT_URL==="string"?window.HUB_WHATSAPP_CONTACT_URL.trim():"";
 const waNumber=typeof window.HUB_WHATSAPP_CONTACT_NUMBER==="string"?window.HUB_WHATSAPP_CONTACT_NUMBER.trim():"";
@@ -9,6 +9,9 @@ if(waHref){const contact=document.createElement("a");contact.className="hub-what
 document.querySelectorAll("[data-wa-form]").forEach(form=>{
  const status=form.querySelector("[data-wa-status]");
  const fallback=form.querySelector("[data-wa-fallback]");
+ const fields=form.querySelector('.secure-form-fields');
+ if(fields&&window.HubSecurity)fields.disabled=false;
+ form.addEventListener('input',()=>{if(fallback){fallback.hidden=true;fallback.removeAttribute('href');}if(status)status.textContent='Prepare the message when you are ready. Nothing is sent automatically.';});
  form.addEventListener("submit",event=>{
   event.preventDefault();
   if(!form.reportValidity())return;
@@ -17,16 +20,27 @@ document.querySelectorAll("[data-wa-form]").forEach(form=>{
    if(status)status.textContent="WhatsApp is temporarily unavailable. Please use the official WhatsApp contact button.";
    return;
   }
-  const kind=form.dataset.waForm==="business"?"Business Inquiry":"Community Review Report";
-  const lines=["Verified Digital Hub — "+kind,""];
-  new FormData(form).forEach((value,key)=>{if(typeof value!=="string")return;const v=value.trim();if(v)lines.push(key+": "+v);});
-  lines.push("","Sent from Verified Digital Hub website.");
-  const url="https://wa.me/"+number+"?text="+encodeURIComponent(lines.join(String.fromCharCode(10)));
-  if(fallback){fallback.href=url;fallback.hidden=false;}
-  if(status)status.textContent="Prepared. WhatsApp will open next. Review the message, attach a redacted screenshot there if needed, then tap Send. This form does not upload files or submit to Google Sheets.";
-  window.location.href=url;
+  try {
+    const prepared=window.HubSecurity.prepareMessage(form.dataset.waForm, new FormData(form).entries(), number);
+    if(fallback){fallback.href=prepared.url;fallback.hidden=false;}
+    if(status)status.textContent='Ready. Nothing has been sent. Use the prepared link to open WhatsApp with your text, then review it and tap Send there. WhatsApp handles that data under its own privacy policy.';
+  } catch(error) {
+    if(fallback){fallback.hidden=true;fallback.removeAttribute('href');}
+    if(status)status.textContent=error.message;
+  }
  });
 });
 const backend=typeof window.HUB_FORM_BACKEND_URL==="string"?window.HUB_FORM_BACKEND_URL.trim():"";const configured=/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec\/?$/.test(backend);
-document.querySelectorAll("[data-hub-form]").forEach(mount=>{const kind=mount.dataset.hubForm==="business"?"business":"review";if(!configured)return;const url=backend.replace(/\/$/,"")+"?kind="+kind;mount.textContent="";const note=document.createElement("p");note.className="hub-form-privacy-note";note.textContent="This form is securely hosted by Google Apps Script. Reports are processed in the owner's private Google Sheet and Drive. Never include passwords, verification codes or unredacted ID documents.";mount.append(note);const iframe=document.createElement("iframe");iframe.className="hub-form-frame";iframe.title=kind==="business"?"Google-hosted business inquiry form":"Google-hosted private report form";iframe.src=url;iframe.loading="eager";iframe.referrerPolicy="strict-origin-when-cross-origin";mount.append(iframe);const fallback=document.createElement("p");fallback.className="hub-form-open";fallback.append("If the embedded form is not visible on your device, ");const link=document.createElement("a");link.href=url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="open the official Google-hosted form in a new tab";fallback.append(link,".");mount.append(fallback);});
+document.querySelectorAll('[data-hub-form]').forEach(mount=>{
+ if(!configured)return;
+ const kind=mount.dataset.hubForm==='business'?'business':'review';
+ const url=backend.replace(/\/$/,'')+'?kind='+kind;
+ mount.replaceChildren();
+ const note=document.createElement('p');note.className='hub-form-privacy-note';note.textContent='This link opens an external Google-hosted form. Check its delivery confirmation before assuming your message was received. Use WhatsApp if the form is unavailable.';
+ const link=document.createElement('a');link.href=url;link.target='_blank';link.rel='noopener noreferrer';link.className='button navy';link.textContent=kind==='business'?'Open Google inquiry form ↗':'Open Google review form ↗';
+ mount.append(note,link);
+});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'){document.querySelectorAll('.nav-drop').forEach(d=>d.open=false);if(nav&&toggle&&nav.classList.contains('is-open')){toggle.click();toggle.focus();}}});
+const route=location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.nav-menu a').forEach(a=>{if(a.getAttribute('href').split('#')[0]===route)a.closest('.nav-drop').querySelector('summary').setAttribute('aria-current','true');});
+if(s){s.setAttribute('aria-label','Search opportunity categories');}if(cat){cat.setAttribute('aria-label','Filter opportunity categories');}if(s||cat)apply();
 });

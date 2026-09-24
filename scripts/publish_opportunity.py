@@ -21,7 +21,7 @@ def https_url(value, required=True):
 def iso(value, required=False):
     value = clean(value, 10)
     if not value and not required: return ""
-    if not re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", value): raise ValueError("Use YYYY-MM-DD for dates.")
+    if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", value): raise ValueError("Use YYYY-MM-DD for dates.")
     date.fromisoformat(value)
     return value
 def slug(value):
@@ -61,7 +61,7 @@ def main():
                   eligibility=eligibility, status=status, checked=date.today().isoformat())
     records = [r for r in records if r["id"] != identifier] + [record]
     records.sort(key=lambda r: (r["status"] != "Open", r["deadline"] or "9999-12-31", r["title"].lower()))
-    DATA.write_text(json.dumps(records, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+    DATA.write_text(json.dumps(records, ensure_ascii=False, indent=2) + chr(10), encoding="utf-8")
     OUT.mkdir(exist_ok=True)
     for r in records:
         target = OUT / (r["id"] + ".html")

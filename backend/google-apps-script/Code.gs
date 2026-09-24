@@ -67,6 +67,68 @@ function hubHash_(value) {
   return Utilities.base64EncodeWebSafe(digest).slice(0, 44);
 }
 
+/**
+ * Optional private WhatsApp notification.
+ * Requires an approved WhatsApp Business Platform message template with TWO
+ * body text variables in this order: submission kind, submission reference.
+ * E.g. "New {{1}} submission saved. Reference: {{2}}. Check your private dashboard."
+ * Configure token, phone-number ID, recipient, template name/language/version
+ * ONLY in Apps Script Script properties. Never put them in GitHub or HTML.
+ * A failed WhatsApp request must NEVER cause a saved report to be retried.
+ */
+function hubNotifyWhatsApp_(kind, reference) {
+  const props = PropertiesService.getScriptProperties();
+  const token = props.getProperty('HUB_WA_ACCESS_TOKEN');
+  const senderId = props.getProperty('HUB_WA_PHONE_NUMBER_ID');
+  const recipient = props.getProperty('HUB_WA_RECIPIENT');
+  const templateName = props.getProperty('HUB_WA_TEMPLATE_NAME');
+  const language = props.getProperty('HUB_WA_TEMPLATE_LANGUAGE') || 'en_US';
+  const version = props.getProperty('HUB_WA_GRAPH_VERSION');
+  if (![token, senderId, recipient, templateName, version].every(Boolean)) {
+    return { configured: false, accepted: false };
+  }
+  if (!/^\\d{7,15}$/.test(recipient) || !/^\\d+$/.test(senderId) ||
+      !/^v\\d+\\.\\d+$/.test(version) ||
+      !/^[a-z0-9_]+$/.test(templateName) ||
+      !/^[a-z]{2}(?:_[A-Z]{2})?$/.test(language)) {
+    throw new Error('WhatsApp configuration format is invalid.');
+  }
+  const endpoint = 'https://graph.facebook.com/' + version + '/' + senderId + '/messages';
+  const payload = {
+    messaging_product: 'whatsapp',
+    recipient_type: 'individual',
+    to: recipient,
+    type: 'template',
+    template: {
+      name: templateName,
+      language: { code: language },
+      components: [{
+        type: 'body',
+        parameters: [
+          { type: 'text', text: kind },
+          { type: 'text', text: reference }
+        ]
+      }]
+    }
+  };
+  const response = UrlFetchApp.fetch(endpoint, {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { Authorization: 'Bearer ' + token },
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  });
+  const code = response.getResponseCode();
+  const result = JSON.parse(response.getContentText() || '{}');
+  if (code < 200 || code >= 300 || !result.messages || !result.messages.length) {
+    // Do not log the bearer token, raw response or any private submission fields.
+    throw new Error('WhatsApp API did not accept the notification (HTTP ' + code + ').');
+  }
+  // API acceptance is not a guarantee of WhatsApp delivery; use delivery webhooks
+  // for confirmed delivered/read status if needed in the future.
+  return { configured: true, accepted: true };
+}
+
 /** Called ONLY by the Google-hosted HTML form through google.script.run. */
 function submitHubForm(form) {
   const props = PropertiesService.getScriptProperties();
@@ -159,5 +221,13 @@ function submitHubForm(form) {
       sh.getRange(row, 11).setValue(notified ? 'Sent' : 'Unavailable - check Sheet');
     }
   } catch (_) {}
-  return { saved: true, reference: reference, notified: notified };
+  let whatsappAccepted = false;
+  try {
+    // Only the report type and reference are sent; NEVER the message, email,
+    // private Sheet URL, Drive link or screenshot.
+    whatsappAccepted = hubNotifyWhatsApp_(kind, reference).accepted;
+  } catch (err) {
+    console.error('WhatsApp notification unavailable for ' + reference + ': ' + err.message);
+  }
+  return { saved: true, reference: reference, notified: notified, whatsappAccepted: whatsappAccepted };
 }

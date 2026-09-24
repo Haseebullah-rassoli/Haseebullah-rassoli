@@ -87,8 +87,8 @@ function hubNotifyWhatsApp_(kind, reference) {
   if (![token, senderId, recipient, templateName, version].every(Boolean)) {
     return { configured: false, accepted: false };
   }
-  if (!/^\\d{7,15}$/.test(recipient) || !/^\\d+$/.test(senderId) ||
-      !/^v\\d+\\.\\d+$/.test(version) ||
+  if (!/^\d{7,15}$/.test(recipient) || !/^\d+$/.test(senderId) ||
+      !/^v\d+\.\d+$/.test(version) ||
       !/^[a-z0-9_]+$/.test(templateName) ||
       !/^[a-z]{2}(?:_[A-Z]{2})?$/.test(language)) {
     throw new Error('WhatsApp configuration format is invalid.');

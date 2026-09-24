@@ -1,0 +1,77 @@
+name: Publish opportunity
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "Opportunity title"
+        required: true
+        type: string
+      category:
+        description: "Category"
+        required: true
+        type: choice
+        options: [Scholarships, Fellowships, Youth Programs, Events, Jobs, Training]
+      summary:
+        description: "Short summary"
+        required: true
+        type: string
+      details:
+        description: "Details (eligibility, requirements, benefits; plain text)"
+        required: true
+        type: string
+      official_source:
+        description: "Official announcement HTTPS URL"
+        required: true
+        type: string
+      application_url:
+        description: "Official application HTTPS URL"
+        required: true
+        type: string
+      deadline:
+        description: "Deadline YYYY-MM-DD (leave blank if not stated)"
+        required: false
+        type: string
+      funding:
+        description: "Funding (do not assume)"
+        required: false
+        type: string
+      eligibility:
+        description: "Eligibility summary"
+        required: false
+        type: string
+      status:
+        description: "Publication status"
+        required: true
+        default: Draft
+        type: choice
+        options: [Draft, Open, Closed]
+      listing_id:
+        description: "Existing listing ID to update; blank creates new"
+        required: false
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: opportunity-publisher
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate listing and page
+        run: python scripts/publish_opportunity.py
+      - name: Commit published content
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add opportunities-data.json opportunity/
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish opportunity listing"
+            git push
+          fi

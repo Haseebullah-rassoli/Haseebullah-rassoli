@@ -40,6 +40,24 @@ document.querySelectorAll('[data-hub-form]').forEach(mount=>{
  const link=document.createElement('a');link.href=url;link.target='_blank';link.rel='noopener noreferrer';link.className='button navy';link.textContent=kind==='business'?'Open Google inquiry form ↗':'Open Google review form ↗';
  mount.append(note,link);
 });
+// The full notice is readable without JavaScript. Motion is a progressive enhancement.
+document.querySelectorAll('[data-update-notice]').forEach(notice=>{
+ const track=notice.querySelector('.hub-notice-track');
+ const copy=notice.querySelector('.hub-notice-copy');
+ const control=notice.querySelector('.hub-notice-toggle');
+ if(!track||!copy||!control)return;
+ const repeat=copy.cloneNode(true);
+ repeat.setAttribute('aria-hidden','true');
+ track.append(repeat);
+ notice.classList.add('is-scrolling');
+ control.hidden=false;
+ control.addEventListener('click',()=>{
+  const paused=notice.classList.toggle('is-paused');
+  control.setAttribute('aria-pressed',String(paused));
+  control.setAttribute('aria-label',paused?'Resume scrolling notice':'Pause scrolling notice');
+  control.textContent=paused?'Resume':'Pause';
+ });
+});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'){document.querySelectorAll('.nav-drop').forEach(d=>d.open=false);if(nav&&toggle&&nav.classList.contains('is-open')){toggle.click();toggle.focus();}}});
 const route=location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.nav-menu a').forEach(a=>{if(a.getAttribute('href').split('#')[0]===route)a.closest('.nav-drop').querySelector('summary').setAttribute('aria-current','true');});
 if(s){s.setAttribute('aria-label','Search opportunity categories');}if(cat){cat.setAttribute('aria-label','Filter opportunity categories');}if(s||cat)apply();
